@@ -4,6 +4,7 @@ import * as userController from "../controllers/userController";
 import * as taskController from "../controllers/taskController";
 import * as userValidation from "../validations/userValidation";
 import * as projectValidation from "../validations/projectValidation";
+import * as taskValidation from "../validations/taskValidation";
 import { authMiddleware } from "../middlewares/authenticate";
 import { validate } from "../middlewares/validate";
 import express from "express";
@@ -52,7 +53,7 @@ router.post(
  */
 router.post(
   "/task",
-  validate(userValidation.createMemberSchema),
+  validate(taskValidation.createTaskSchema),
   taskController.createTask
 );
 
