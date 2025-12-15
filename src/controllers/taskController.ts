@@ -8,7 +8,7 @@ export const createTask = async (req: Request, res: Response) => {
   const project = await prisma.project.findUnique({
     where: {
       id: projectId,
-      merchantId : req.user.id
+      merchantId: req.user.id,
     },
   });
 
@@ -33,4 +33,10 @@ export const createTask = async (req: Request, res: Response) => {
     message: "Task created successfully",
     data: task,
   });
+};
+
+export const assignTask = (req: Request, res: Response) => {
+    res.json({
+        message : "this is assign task route"
+    });
 };

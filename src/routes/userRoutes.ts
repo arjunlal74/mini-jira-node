@@ -57,4 +57,10 @@ router.post(
   taskController.createTask
 );
 
+router.post(
+  "/task/assign",
+  validate(taskValidation.taskAssignSchema),
+  taskController.assignTask
+);
+
 export default router;

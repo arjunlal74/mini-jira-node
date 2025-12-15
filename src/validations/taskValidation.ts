@@ -5,3 +5,8 @@ export const createTaskSchema = Joi.object({
   description: Joi.string().min(6).optional(),
   projectId: Joi.number().integer().required()
 });
+
+export const taskAssignSchema = Joi.object({
+  merchantId: Joi.number().integer().required(),
+  taskId: Joi.number().integer().required()
+});
