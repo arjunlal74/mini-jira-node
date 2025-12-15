@@ -24,13 +24,13 @@ export const createTask = async (req: Request, res: Response) => {
       name,
       description,
       projectId: projectId,
-      uuid: `pr_${crypto.randomBytes(8).toString("hex")}`,
+      uuid: `tk_${crypto.randomBytes(8).toString("hex")}`,
     },
   });
 
   res.status(201).json({
     success: true,
     message: "Task created successfully",
-    data: project,
+    data: task,
   });
 };
