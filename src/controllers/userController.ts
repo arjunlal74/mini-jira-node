@@ -63,7 +63,16 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    let userPassword: string | null | undefined;
+    let isPasswordValid: boolean;
+
+    if (user.role === UserRole.MEMBER && user.isFirstLogin) {
+      userPassword = user.tempPassword;
+      isPasswordValid = (password === userPassword);
+    } else {
+      userPassword = user.password;
+      isPasswordValid = await bcrypt.compare(password, user.password);
+    }
 
     if (!isPasswordValid) {
       res.status(422).json({

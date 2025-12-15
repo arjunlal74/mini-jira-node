@@ -51,6 +51,7 @@ export const authMiddleware = async (
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role
     };
 
     // 4️⃣ Attach user to request

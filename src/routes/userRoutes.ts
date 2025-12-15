@@ -3,6 +3,7 @@ import * as userController from "../controllers/userController";
 import { validate } from "../middlewares/validate";
 import * as userValidation from "../validations/userValidation";
 import { authMiddleware } from "../middlewares/authenticate";
+import { requireMerchant } from "../middlewares/requireMerchant";
 
 const router = express.Router();
 
@@ -21,9 +22,12 @@ router.post(
 );
 
 //*********************************************************Authenticated Routes************************************************************
-router.use(authMiddleware);
+router.use(authMiddleware); //middleware
 
 router.get("/details", userController.getUser);
+
+//********************************************************Merchant only Routes**********************************************************
+router.use(requireMerchant);//middleware
 
 router.post(
   "/create-member",
