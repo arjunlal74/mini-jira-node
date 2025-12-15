@@ -1,12 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import prisma from "../config/database";
+
+import jwt from "jsonwebtoken";
 
 interface JwtPayload {
   userId: number;
   email: string;
 }
 
-export const authMiddleware = (
+export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,18 +20,18 @@ export const authMiddleware = (
     if (!authHeader) {
       return res.status(401).json({
         success: false,
-        message: 'Authorization header missing'
+        message: "Authorization header missing",
       });
     }
 
     // 2️⃣ Extract token
     // Format: Bearer <token>
-    const [type, token] = authHeader.split(' ');
+    const [type, token] = authHeader.split(" ");
 
-    if (type !== 'Bearer' || !token) {
+    if (type !== "Bearer" || !token) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid authorization format'
+        message: "Invalid authorization format",
       });
     }
 
@@ -39,16 +41,27 @@ export const authMiddleware = (
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
+    const user = await prisma.user.findUnique({
+      where: {
+        email: decoded.email,
+      },
+    });
+
+    const userReqData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+
     // 4️⃣ Attach user to request
-    req.user = decoded;
+    req.user = userReqData;
 
     // 5️⃣ Continue
     next();
-
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: 'Invalid or expired token'
+      message: "Invalid or expired token",
     });
   }
 };

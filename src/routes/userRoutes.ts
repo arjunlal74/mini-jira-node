@@ -9,13 +9,26 @@ const router = express.Router();
 /**
  * Authentication Routes
  */
-router.post("/register",validate(userValidation.registerSchema) ,userController.register);
-router.post("/login",validate(userValidation.loginSchema), userController.login);
+router.post(
+  "/register",
+  validate(userValidation.registerSchema),
+  userController.register
+);
+router.post(
+  "/login",
+  validate(userValidation.loginSchema),
+  userController.login
+);
 
 //*********************************************************Authenticated Routes************************************************************
 router.use(authMiddleware);
 
 router.get("/details", userController.getUser);
 
+router.post(
+  "/create-member",
+  validate(userValidation.createMemberSchema),
+  userController.createMember
+);
 
 export default router;

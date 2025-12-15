@@ -1,6 +1,6 @@
 enum UserRole {
   MERCHANT = "MERCHANT",
-  USER = "USER",
+  MEMBER = "MEMBER",
 }
 
 export default UserRole;

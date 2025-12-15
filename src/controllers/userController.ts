@@ -98,3 +98,47 @@ export const getUser = (req: Request, res: Response) => {
     user: req.user,
   });
 };
+
+export const createMember = async (req: Response, res: Response) => {
+  try {
+    const { name, email } = req.body;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User with this email already exists",
+      });
+    }
+
+    const tempPassword = name + "minijira";
+
+    const member = await prisma.user.create({
+      data: {
+        name,
+        email,
+        tempPassword: tempPassword,
+        role: UserRole.MEMBER,
+        merchantId: req.user.id,
+      },
+    });
+
+    const { password: _, ...memberWithoutPassword } = member;
+
+    res.status(201).json({
+      success: true,
+      message: "Member registered successfully",
+      data: memberWithoutPassword,
+    });
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Login failed",
+      error: error.message,
+    });
+  }
+};

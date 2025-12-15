@@ -8,12 +8,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  role      String
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  name         String?
+  password     String?
+  tempPassword String?  @map("temp_password")
+  role         String
+  merchantId   Int? @map("merchant_id")
+  merchant     User?    @relation("MerchantUsers", fields: [merchantId], references: [id])
+  members        User[]   @relation("MerchantUsers")
+  isFirstLogin Boolean @default(true) @map("is_first_login")
+  status       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 }
