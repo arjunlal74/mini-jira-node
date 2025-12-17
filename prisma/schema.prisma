@@ -23,6 +23,7 @@ model User {
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
   taskAssignments TaskAssignment[]
+  messages        Message[]
 }
 
 model Project {
@@ -49,8 +50,8 @@ model Task {
   status          Boolean          @default(true)
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
-  assignments     TaskAssignment[]
   taskAssignments TaskAssignment[]
+  chat            Chat?
 }
 
 model TaskAssignment {
@@ -61,4 +62,24 @@ model TaskAssignment {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  taskId    Int       @unique @map("task_id")
+  task      Task      @relation(fields: [taskId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now()) @map("created_at")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chatId    Int      @map("chat_id")
+  senderId  Int      @map("sender_id")
+  content   String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
 }
