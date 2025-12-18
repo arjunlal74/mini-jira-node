@@ -23,10 +23,11 @@ const io = new Server(httpServer, {
 // 🔐 Socket authentication (example)
 io.use(async (socket, next) => {
   try {
-    const userId = socket.handshake.auth.userId; // replace with JWT later
-    if (!userId) return next(new Error("Unauthorized"));
+    // const userId = socket.handshake.auth.userId; // replace with JWT later
+    // if (!userId) return next(new Error("Unauthorized"));
 
-    socket.data.userId = Number(userId);
+    // socket.data.userId = Number(userId);
+    socket.data.userId = Number(1);
     next();
   } catch (err) {
     next(new Error("Unauthorized"));
@@ -66,6 +67,8 @@ io.on("connection", (socket) => {
 
     socket.join(`task:${taskId}`);
 
+    console.log(`User joined the chat room : task:${taskId}`);
+
     socket.emit("JOINED_TASK_CHAT", {
       chatId: chat.id,
       taskId,
@@ -73,11 +76,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("SEND_MESSAGE", async ({ taskId, content }) => {
+    console.log("enteeeeeeeerrrrrrrrrrred send messageeeeee");
     const userId = socket.data.userId;
+
+    console.log("userIdddddddddddddddddddd" , userId);
 
     const chat = await prisma.chat.findUnique({
       where: { taskId },
     });
+
+    console.log("chattttttttttttttttttttttttttttttttttt" , chat);
 
     if (!chat) return;
 
@@ -92,7 +100,11 @@ io.on("connection", (socket) => {
       },
     });
 
+    console.log("messageeeeeeeeeeeeeeeeeeeeeeeeeeeee" , message);
+
     io.to(`task:${taskId}`).emit("NEW_MESSAGE", message);
+
+    console.log(`new message send to room ${taskId}`);
   });
 
   socket.on("disconnect", () => {
