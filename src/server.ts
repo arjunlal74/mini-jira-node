@@ -35,7 +35,7 @@ io.use(async (socket, next) => {
 
 // 🔌 Socket logic
 io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.data.userId);
+  console.log("Socket connected:", socket.id);
 
   socket.on("JOIN_TASK_CHAT", async ({ taskId }) => {
     const userId = socket.data.userId;
@@ -51,15 +51,13 @@ io.on("connection", (socket) => {
     if (!task) return socket.emit("ERROR", "Task not found");
 
     const isMerchant = task.project.merchantId === userId;
-    const isAssigned = task.taskAssignments.some(
-      (ta) => ta.userId === userId
-    );
+    const isAssigned = task.taskAssignments.some((ta) => ta.userId === userId);
 
     if (!isMerchant && !isAssigned) {
       return socket.emit("ERROR", "Access denied");
     }
 
-    // Ensure chat exists
+    //     // Ensure chat exists
     const chat = await prisma.chat.upsert({
       where: { taskId },
       update: {},
@@ -107,7 +105,6 @@ httpServer.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-
 // import app from "./app";
 // import dotenv from "dotenv";
 
@@ -118,4 +115,3 @@ httpServer.listen(PORT, () => {
 // app.listen(PORT, () => {
 //     console.log(`Server running at http://localhost:${PORT}`);
 // });
-
