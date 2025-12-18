@@ -1,9 +1,8 @@
 import { Server, Socket } from "socket.io";
 import prisma from "../config/database";
-
+import chatSocketEvents from "../enums/chatSocketEvents";
 
 export const initSocket = (io: Server) => {
-
   // 🔐 Socket auth middleware
   io.use((socket, next) => {
     try {
@@ -19,7 +18,7 @@ export const initSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
     console.log("Socket connected:", socket.id);
 
-    socket.on("JOIN_TASK_CHAT", async ({ taskId }) => {
+    socket.on(chatSocketEvents.JOIN_TASK_CHAT, async ({ taskId }) => {
       const userId = socket.data.userId;
 
       const task = await prisma.task.findUnique({
@@ -51,13 +50,13 @@ export const initSocket = (io: Server) => {
 
       console.log(`User ${userId} joined room task:${taskId}`);
 
-      socket.emit("JOINED_TASK_CHAT", {
+      socket.emit(chatSocketEvents.JOINED_TASK_CHAT, {
         chatId: chat.id,
         taskId,
       });
     });
 
-    socket.on("SEND_MESSAGE", async ({ taskId, content }) => {
+    socket.on(chatSocketEvents.SEND_MESSAGE, async ({ taskId, content }) => {
       const userId = socket.data.userId;
       const room = `task:${taskId}`;
 
@@ -82,7 +81,7 @@ export const initSocket = (io: Server) => {
         },
       });
 
-      io.to(room).emit("NEW_MESSAGE", message);
+      io.to(room).emit(chatSocketEvents.NEW_MESSAGE, message);
     });
 
     socket.on("disconnect", () => {
