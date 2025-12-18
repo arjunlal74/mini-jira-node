@@ -108,7 +108,7 @@ export const getUser = (req: Request, res: Response) => {
   });
 };
 
-export const createMember = async (req: Response, res: Response) => {
+export const createMember = async (req: Request, res: Response) => {
   try {
     const { name, email } = req.body;
 
