@@ -1,14 +1,15 @@
-import { Worker } from 'bullmq';
-import { redisConnection } from '../queues/connection';
-import queueNames from '../enums/queueNames';
+import { Worker } from "bullmq";
+import { redisConnection } from "../queues/connection";
+import queueNames from "../enums/queueNames";
 
 new Worker(
   queueNames.DEFAULT,
   async (job) => {
+    console.log("🔄 Worker picked job:", job.name, job.data);
     const JobClass = require(`../jobs/${job.name}`).default;
     await JobClass.handle(job.data);
   },
   { connection: redisConnection }
 );
 
-console.log('🟢 Default worker running...');
+console.log("🟢 Default worker running...");
