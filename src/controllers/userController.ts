@@ -156,8 +156,9 @@ export const createMember = async (req: Request, res: Response) => {
 export const test = (req: Request, res: Response) => {
   console.log("this is testing route.......................");
 
+  TestJob.dispatch({userId: 1});        // misc
+
   res.json({
     message : "this is testing route"
   });
-  TestJob.dispatchMisc(null);        // misc
 };
