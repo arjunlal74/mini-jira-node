@@ -1,4 +1,4 @@
-enum queueNames {
+export enum queueNames {
   DEFAULT = "default",
   MISC = "misc",
 }
