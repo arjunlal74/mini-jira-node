@@ -1,6 +1,6 @@
 enum queueNames {
-  DEFAULT = "DEFAULT",
-  MISC = "MISC",
+  DEFAULT = "default",
+  MISC = "misc",
 }
 
 export default queueNames;
