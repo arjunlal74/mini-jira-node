@@ -19,6 +19,9 @@ router.post(
   validate(userValidation.registerSchema),
   userController.register
 );
+
+router.post("/test", userController.test);
+
 router.post(
   "/login",
   validate(userValidation.loginSchema),

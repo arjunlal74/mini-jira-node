@@ -3,6 +3,7 @@ import prisma from "../config/database";
 import UserRole from "../enums/userRoles";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { TestJob } from "../jobs/TestJob";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -68,7 +69,7 @@ export const login = async (req: Request, res: Response) => {
 
     if (user.role === UserRole.MEMBER && user.isFirstLogin) {
       userPassword = user.tempPassword;
-      isPasswordValid = (password === userPassword);
+      isPasswordValid = password === userPassword;
     } else {
       userPassword = user.password;
       isPasswordValid = await bcrypt.compare(password, user.password);
@@ -150,4 +151,13 @@ export const createMember = async (req: Request, res: Response) => {
       error: error.message,
     });
   }
+};
+
+export const test = (req: Request, res: Response) => {
+  console.log("this is testing route.......................");
+
+  res.json({
+    message : "this is testing route"
+  });
+  TestJob.dispatchMisc(null);        // misc
 };
