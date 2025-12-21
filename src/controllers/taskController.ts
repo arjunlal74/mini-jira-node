@@ -36,7 +36,7 @@ export const createTask = async (req: Request, res: Response) => {
 };
 
 export const assignTask = (req: Request, res: Response) => {
-    res.json({
-        message : "this is assign task route"
-    });
+  res.json({
+    message: "this is assign task route",
+  });
 };

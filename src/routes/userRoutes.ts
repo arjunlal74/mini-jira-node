@@ -51,6 +51,8 @@ router.post(
   projectController.createProject
 );
 
+router.get("/projects", projectController.getProjects);
+
 /**
  * Task Routes
  */
