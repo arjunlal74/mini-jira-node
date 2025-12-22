@@ -21,6 +21,15 @@ const io = new Server(httpServer, {
 // Initialize socket logic
 initSocket(io);
 
+// ⬇️ Scheduler bootstrap (RUN ONCE)
+if (process.env.IS_SCHEDULER === "true") {
+  import("./schedulers")
+    .then((m) => m.registerAllSchedulers())
+    .catch((err) => {
+      console.error("❌ Failed to register schedulers", err);
+    });
+}
+
 // ⬇️ Start server
 httpServer.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

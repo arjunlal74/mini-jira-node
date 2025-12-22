@@ -1,9 +1,6 @@
 export abstract class BaseFilter {
   protected query: Record<string, any>;
-  protected filters: Record<
-    string,
-    (where: any, value: any) => void
-  >;
+  protected filters: Record<string, (where: any, value: any) => void>;
 
   constructor(query: Record<string, any>) {
     this.query = query;
