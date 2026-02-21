@@ -14,6 +14,41 @@ services:
     environment:
       - DATABASE_URL=postgresql://mini_jira:password@postgres:5432/mini_jira?schema=public
       - REDIS_HOST=redis
+      - IS_SCHEDULER=true
+    depends_on:
+      - postgres
+      - redis
+
+  worker-default:
+    build: .
+    container_name: mini-jira-worker-default
+    restart: always
+    command: npm run worker:default
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://mini_jira:password@postgres:5432/mini_jira?schema=public
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  worker-misc:
+    build: .
+    container_name: mini-jira-worker-misc
+    restart: always
+    command: npm run worker:misc
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://mini_jira:password@postgres:5432/mini_jira?schema=public
+      - REDIS_HOST=redis
     depends_on:
       - postgres
       - redis

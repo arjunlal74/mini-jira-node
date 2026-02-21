@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import prisma from "../config/database";
 import { ProjectFilters } from "../filters/ProjectFilter";
 import crypto from "crypto";
+import { catchAsync } from "../utils/catchAsync";
 
-export const createProject = async (req: Request, res: Response) => {
+export const createProject = catchAsync(async (req: Request, res: Response) => {
   const { name, description } = req.body;
 
   const project = await prisma.project.create({
@@ -20,26 +21,18 @@ export const createProject = async (req: Request, res: Response) => {
     message: "Project created successfully",
     data: project,
   });
-};
+});
 
-export const getProjects = async (req: Request, res: Response) => {
-  try {
-    const filters = new ProjectFilters(req.query);
-    const where = filters.apply();
+export const getProjects = catchAsync(async (req: Request, res: Response) => {
+  const filters = new ProjectFilters(req.query);
+  const where = filters.apply();
 
-    const projects = await prisma.project.findMany({
-      where,
-    });
+  const projects = await prisma.project.findMany({
+    where,
+  });
 
-    res.status(200).json({
-      success: true,
-      data: projects,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-      error: error.message,
-    });
-  }
-};
+  res.status(200).json({
+    success: true,
+    data: projects,
+  });
+});

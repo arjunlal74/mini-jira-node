@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import prisma from "../config/database";
 import crypto from "crypto";
+import { catchAsync } from "../utils/catchAsync";
+import { AppError } from "../utils/AppError";
 
-export const createTask = async (req: Request, res: Response) => {
+export const createTask = catchAsync(async (req: Request, res: Response) => {
   const { name, description, projectId } = req.body;
 
   const project = await prisma.project.findUnique({
@@ -13,10 +15,7 @@ export const createTask = async (req: Request, res: Response) => {
   });
 
   if (!project) {
-    res.status(404).json({
-      success: false,
-      message: "Project not found",
-    });
+    throw new AppError("Project not found", 404);
   }
 
   const task = await prisma.task.create({
@@ -33,10 +32,10 @@ export const createTask = async (req: Request, res: Response) => {
     message: "Task created successfully",
     data: task,
   });
-};
+});
 
-export const assignTask = (req: Request, res: Response) => {
+export const assignTask = catchAsync(async (req: Request, res: Response) => {
   res.json({
     message: "this is assign task route",
   });
-};
+});
