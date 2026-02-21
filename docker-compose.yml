@@ -11,22 +11,24 @@ services:
       - /app/node_modules
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgresql://mini_jira:password@postgres:5432/mini_jira?schema=public
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
-    image: mysql:8
-    container_name: mini-jira-mysql
+  postgres:
+    image: postgres:15
+    container_name: mini-jira-postgres
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mini_jira
-      MYSQL_USER: mini_jira
-      MYSQL_PASSWORD: password
+      POSTGRES_USER: mini_jira
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mini_jira
+      TZ: Asia/Kolkata
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  mysql_data:
+  postgres_data:
