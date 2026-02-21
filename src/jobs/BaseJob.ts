@@ -16,7 +16,7 @@ export abstract class BaseJob<TData> {
 
   private static queueInstances: Map<string, Queue> = new Map();
 
-  protected static getQueue(queueName: string): Queue {
+  static getQueue(queueName: string): Queue {
     if (!this.queueInstances.has(queueName)) {
       const queue = new Queue(queueName, {
         connection: redisConnection,
