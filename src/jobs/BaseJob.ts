@@ -14,10 +14,16 @@ export abstract class BaseJob<TData> {
   static queue: string = queueNames.DEFAULT;
   static jobName: string = "";
 
-  protected static getQueue(queueName: string): Queue {
-    return new Queue(queueName, {
-      connection: redisConnection,
-    });
+  private static queueInstances: Map<string, Queue> = new Map();
+
+  static getQueue(queueName: string): Queue {
+    if (!this.queueInstances.has(queueName)) {
+      const queue = new Queue(queueName, {
+        connection: redisConnection,
+      });
+      this.queueInstances.set(queueName, queue);
+    }
+    return this.queueInstances.get(queueName)!;
   }
 
   static async dispatch<T>(
